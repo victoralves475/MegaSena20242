@@ -60,6 +60,7 @@ fun NumerosSena(megaSena: MegaSena, modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        Text("Números da Mega Sena")
         TextField(
             value = serieApostada,
             onValueChange = { serieApostada = it },
@@ -76,7 +77,13 @@ fun NumerosSena(megaSena: MegaSena, modifier: Modifier = Modifier) {
         if (mostrarNumeros) {
             var corAtual = Color.Red
             Row {
-                val numerosApostados = serieApostada.split(",").map { it.toInt() }
+                val numerosApostados = serieApostada.split(",").map {
+                    try {
+                        it.toInt()
+                    } catch (e: NumberFormatException) {
+                        Log.e("NumerosSena", "Número inválido inserido")
+                    }
+                }
                 for (numero in megaSena.numeros) {
                     if (numerosApostados.contains(numero)) {
                         corAtual = Color.Blue
@@ -89,6 +96,15 @@ fun NumerosSena(megaSena: MegaSena, modifier: Modifier = Modifier) {
                     corAtual = Color.Red
                 }
             }
+        }
+        Button(
+            onClick = {
+                mostrarNumeros = false
+                serieApostada = ""
+                Log.d("NumerosSena", "Série apostada redefinida")
+            }
+        ) {
+            Text("Redefinir")
         }
     }
 }
